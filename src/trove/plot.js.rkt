@@ -17,11 +17,11 @@
     (fun-spec (name "bar-chart") (arity 3))
     (fun-spec (name "grouped-bar-chart") (arity 3))
 
-    (fun-spec (name "display-function") (arity 2))
-    (fun-spec (name "display-scatter") (arity 2))
-    (fun-spec (name "display-line") (arity 2))
+    (fun-spec (name "render-function") (arity 2))
+    (fun-spec (name "render-scatter") (arity 2))
+    (fun-spec (name "render-line") (arity 2))
 
-    (fun-spec (name "display-multi-plot") (arity 3))
+    (fun-spec (name "render-multi-plot") (arity 3))
 
     (type-spec (name "PlotOptions"))
     (type-spec (name "PlotWindowOptions"))
@@ -32,17 +32,18 @@
 
 @docmodule["plot"]{
   The Pyret Plot library. It consists of plot, chart, and data visualization tools.
-  The visualization will appear on a dialog.
+  All functions return the visualization as an image. Additionally, if @pyret{interact} is true,
+  the visualization will appear on a dialog where users can interact with it.
 
   @itemlist[
     @item{To close the dialog, click the close button on the title bar or press @tt{esc}}
-    @item{To save a snapshot of the visualization, click the save button on the
+    @item{To save a snapshot of the visualization as a file, click the save button on the
           title bar and choose a location to save the image}
   ]
 
   Every function in this library is available on the @tt{plot} module object.
   For example, if you used @pyret{import plot as P}, you would write
-  @pyret{P.display-function} to access @pyret{display-function} below. If you used
+  @pyret{P.render-function} to access @pyret{render-function} below. If you used
   @pyret{include}, then you can refer to identifiers without needing to prefix
   with @pyret{P.}.
 
@@ -128,7 +129,7 @@
   instead of connecting lines between them. This is to avoid the problem of inaccurate plotting
   causing from, for example, discontinuity of the function, or a function which oscillates infinitely.
 
-  @function["display-multi-plot"
+  @function["render-multi-plot"
     #:contract (a-arrow S
                         (L-of (link "Plot"))
                         (link "PlotWindowOptions")
@@ -149,7 +150,7 @@
       row: 3, 9
       row: 4, 16
     end, _.{color: I.green})
-  display-multi-plot(
+  render-multi-plot(
     'quadratic function and a scatter plot',
     [list: p1, p2],
     _.{x-min: 0, x-max: 20, y-min: 0, y-max: 20})
@@ -160,7 +161,7 @@
   top, bottom window boundary are 0, 20, 0, 20 respectively.
   }
 
-  @function["display-function"
+  @function["render-function"
     #:contract (a-arrow S (a-arrow N N) (a-arrow N N))
     #:args '(("title" #f) ("f" #f))
     #:return (a-arrow N N)
@@ -170,11 +171,11 @@
 
   @examples{
   NUM_E = ~2.71828
-  display-function('converge to 1', lam(x): 1 - num-expt(NUM_E, 0 - x) end)
+  render-function('converge to 1', lam(x): 1 - num-expt(NUM_E, 0 - x) end)
   }
   }
 
-  @function["display-line"
+  @function["render-line"
     #:contract (a-arrow S TA TA)
     #:args '(("title" #f) ("tab" #f))
     #:return TA
@@ -183,7 +184,7 @@
   display it. See @link{line-plot} for more information.
 
   @examples{
-  display-line('My line', table: x, y
+  render-line('My line', table: x, y
     row: 1, 2
     row: 2, 10
     row: 2.1, 3
@@ -193,7 +194,7 @@
   }
   }
 
-  @function["display-scatter"
+  @function["render-scatter"
     #:contract (a-arrow S TA TA)
     #:args '(("title" #f) ("tab" #f))
     #:return TA
@@ -202,7 +203,7 @@
   display it. See @link{scatter-plot} for more information.
 
   @examples{
-  display-scatter('My scatter plot', table: x, y
+  render-scatter('My scatter plot', table: x, y
     row: 1, 2
     row: 1, 3.1
     row: 4, 1
